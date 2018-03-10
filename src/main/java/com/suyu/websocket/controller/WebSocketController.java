@@ -12,18 +12,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 消息推送(个人和广播)
  */
 @Controller
-@RequestMapping(value = "index")
 public class WebSocketController {
     @Autowired
     private SocketServer socketServer;
 
-    @RequestMapping(value = "/")
+    @RequestMapping(value = "/index")
     public String idnex() {
 
         return "index";
     }
 
-    @RequestMapping(value = "admin")
+    @RequestMapping(value = "/admin")
     public String admin(Model model) {
         int num = socketServer.getOnlineNum();
         String str = socketServer.getOnlineUsers();
