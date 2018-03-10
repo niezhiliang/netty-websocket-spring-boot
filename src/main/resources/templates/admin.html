@@ -19,7 +19,7 @@
 		   if(msg!=null){
 				$.ajax({
                     method: 'get',
-                    url: '/index/sendmsg',
+                    url: '/sendmsg',
                     data:{
                         username: user,
                         msg:msg
@@ -38,7 +38,7 @@
 		   if(msg!=null){
                $.ajax({
                    method: 'get',
-                   url: '/index/sendAll',
+                   url: '/sendAll',
                    data:{
                        msg:msg
                    },
