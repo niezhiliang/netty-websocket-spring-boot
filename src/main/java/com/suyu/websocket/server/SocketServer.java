@@ -6,6 +6,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @ServerEndpoint(value = "/socketServer/{userid}")
@@ -100,5 +101,18 @@ public class SocketServer {
 		for (String key : sessionIds.keySet()) {
 			sendMessage(msg, sessionIds.get(key));
 	    }
+	}
+
+	/**
+	 * 多个人发送给指定的几个用户
+	 * @param msg
+	 * @param persons  用户s
+	 */
+
+	public static void SendMany(String msg,String [] persons) {
+		for (String userid : persons) {
+			sendMessage(msg, userid);
+		}
+
 	}
 }

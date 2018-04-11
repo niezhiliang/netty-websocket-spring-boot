@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 /**
  * websocket
  * 消息推送(个人和广播)
@@ -39,8 +41,9 @@ public class WebSocketController {
     @ResponseBody
     public String sendmsg(String msg,String username){
         //第一个参数 :msg 发送的信息内容
-        //第二个参数为用户长连接传的username
-        SocketServer.sendMessage(msg,username);
+        //第二个参数为用户长连接传的用户人数
+        String [] persons = username.split(",");
+        SocketServer.SendMany(msg,persons);
         return "success";
     }
 
