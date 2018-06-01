@@ -6,7 +6,7 @@
 
     <groupId>com.suyu</groupId>
     <artifactId>springbootwebsocket</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>v1.0.0</version>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
