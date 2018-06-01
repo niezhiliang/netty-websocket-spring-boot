@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  websocket:
+     image: suyu/springbootwebsocket:v1.0.0
+        restart: always
+        container_name: websocket
+        hostname: websocket
+        ports:
+          - "8086:8086"
