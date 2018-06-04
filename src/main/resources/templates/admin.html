@@ -2,24 +2,75 @@
 <html  xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8"/>
-<title>统计</title>
-    <script th:src="@{/jquery.min.js}"></script>
+<title>服务端</title>
+    <link rel="stylesheet" th:href="@{../layui/css/layui.css}" media="all" />
+    <link rel="stylesheet" th:href="@{../layui/css/layui.mobile.css}" media="all" />
+    <script th:src="@{../jquery.min.js}"></script>
+    <script th:src="@{../layui/layui.all.js}"></script>
+    <script th:src="@{../layui/layui.js}"></script>
 </head>
 <body>
-            当前在线人数总计<div id="sum" th:text="${num}" ></div> <br/>
-           具体人员为：<div id="users" th:text="${users}"></div> <br/>
-          发送消息：请输入推送内容<input type="text" id="msg"/>  <br/>
-          请输入发送人昵称<input type="text" id="username"/>
-            <span>(如果发送多个用户，用户昵称之间用逗号隔开)</span>  <br/>
-   <input type="button" value="发送" onclick="sendMsg()"/>        <br/>
-   <input type="button" value="全部发送" onclick="sendAll()"/>
+
+
+<div class="layui-row">
+    <div class="layui-col-md8 layui-col-md-offset2" style="margin-top: 20px">
+            <h1 style="margin-top: 100px">服务端</h1>
+            <div class="layui-card">
+                <div class="layui-card-body-inline" style="padding-bottom: 20px">
+                    <div class="layui-form-item">
+                    <label class="layui-form-label">在线数量:<span  id="sum" th:text="${num}">0</span></label>
+                    </div>
+
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">在线人:</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" th:each="user: ${users}"  name="check" th:title="${user}">
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">信息内容:</label>
+                        <div class="layui-input-inline" style="width: 300px">
+                            <input id="msg" type="text" name="title" required  lay-verify="required" placeholder="请输入要发送的内容" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <button class="layui-btn" onclick="sendMsg()">发送</button>
+                    <button class="layui-btn" onclick="sendAll()">全部发送</button>
+                </div>
+            </div>
+            <div class="layui-card" style="margin-top: 100px">
+                <div class="layui-card-header">
+                    <h1>操作详情</h1>
+                </div>
+
+                <div id="content" class="layui-card-body" placeholder="请输入要发送的内容">
+
+                </div>
+            </div>
+    </div>
+</div>
    <script type="text/javascript">
-	   function sendMsg(){
-		   var user = $("#username").val();
+
+       layui.use('form', function () {
+           var form = layui.form;
+       });
+       function sendMsg(){
+           var user = [];
+           $("input[name='check']:checked").each(function(i){//把所有被选中的复选框的值存入数组
+               //user =user+$(this).attr("title")+","
+               user[i] = $(this).attr("title");
+                    });
+           // if (user.length > 0) {
+           //     user = user.substr(0, user.length - 1);
+           // }
+
 		   var msg = $("#msg").val();
 		   if(msg!=null){
 				$.ajax({
-                    method: 'get',
+                    method: 'post',
                     url: '/sendmsg',
                     data:{
                         username: user,
@@ -51,6 +102,38 @@
 			   alert("请填写要发送的内容");
 		   }
 	   }
+
+       function connect(){
+               if ('WebSocket' in window){
+                  // ws = new WebSocket("ws://www.niezhiliang.com:8086/socketServer/niezhiliang9595");
+                   ws = new WebSocket("ws://127.0.0.1:8086/socketServer/niezhiliang9595");
+               }
+               else if ('MozWebSocket' in window){
+                   //ws = new MozWebSocket("ws://www.niezhiliang.com:8086/socketServer/niezhiliang9595");
+                   ws = new MozWebSocket("ws://127.0.0.1:8086/socketServer/niezhiliang9595");
+               }
+               else{
+                   alert("该浏览器不支持websocket");
+               }
+               ws.onmessage = function(evt) {
+                   var content = $("#content").html();
+                   content = content+evt.data;
+                   $("#content").html(content+'<div style="float: right;margin-bottom: 8px">\n' +
+                       '                        <p><q style="color: mediumorchid">'+evt.data+ '</span></p>\n' +
+                       '                    </div>\n' +
+                       '                    <br/>');
+                   console.log(msg)
+               };
+
+               ws.onclose = function(evt) {
+                  console.log('连接关闭')
+               };
+
+               ws.onopen = function(evt) {
+                  console.log('连接成功')
+               };
+       }
+           connect()
    </script>
 </body>
 
