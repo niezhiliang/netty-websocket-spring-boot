@@ -53,7 +53,11 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
+<<<<<<< HEAD
     <build>
+=======
+       <build>
+>>>>>>> d0a4bbe364a4c6f2c770bcb09c79bc483274e01d
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -78,4 +82,8 @@
             </plugin>
         </plugins>
     </build>
+<<<<<<< HEAD
 </project>
+=======
+</project>
+>>>>>>> d0a4bbe364a4c6f2c770bcb09c79bc483274e01d

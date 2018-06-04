@@ -7,4 +7,8 @@ services:
         container_name: websocket
         hostname: websocket
         ports:
+<<<<<<< HEAD
           - "8086:8086"
+=======
+          - "8086:8086"
+>>>>>>> d0a4bbe364a4c6f2c770bcb09c79bc483274e01d
