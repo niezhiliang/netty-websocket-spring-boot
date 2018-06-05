@@ -68,7 +68,7 @@ function connect(){
 	        
 	    ws.onmessage = function(evt) {
             var content = $("#content").html();
-            $("#content").html(content+'<div style="float: right;margin-bottom: 8px">\n' +
+            $("#content").html(content+'<div style="text-align: right;margin-bottom: 8px">\n' +
                 '                        <p><q style="color: mediumorchid">服务端:</q><span>'+evt.data+ '</span></p>\n' +
                 '                    </div>\n' +
                 '                    <br/>');
@@ -76,14 +76,14 @@ function connect(){
 	        
 	    ws.onclose = function(evt) {
             var content = $("#content").html();
-            $("#content").html(content+'<div style="float: left;margin-bottom: 8px">\n' +
+            $("#content").html(content+'<div style="margin-bottom: 8px">\n' +
                 '                        <p><q style="color: coral">客户端:</q><span>连接中断</span></p>\n' +
                 '                    </div>\n' +
                 '                    <br/>');
 	    };    
 	        
 	    ws.onopen = function(evt) {
-            $("#content").html('<div style="float: left;margin-bottom: 8px">\n' +
+            $("#content").html('<div style="margin-bottom: 8px">\n' +
                 '                        <p><q style="color: coral">客户端:</q><span>连接成功...</span></p>\n' +
                 '                    </div>\n' +
                 '                    <br/>');
@@ -96,7 +96,7 @@ function connect(){
 function sendMsg() {    
     ws.send($("#writeMsg").val());
     var content = $("#content").html();
-    $("#content").html(content+'<div style="float: left">\n' +
+    $("#content").html(content+'<div>\n' +
         '                        <p><q style="color: coral">客户端:</q><span>'+$("#writeMsg").val()+ '</span></p>\n' +
         '                    </div>\n' +
         '                    <br/>');

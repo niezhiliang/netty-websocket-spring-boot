@@ -60,23 +60,28 @@
        function sendMsg(){
            var user = [];
            $("input[name='check']:checked").each(function(i){//把所有被选中的复选框的值存入数组
-               //user =user+$(this).attr("title")+","
-               user[i] = $(this).attr("title");
-                    });
-           // if (user.length > 0) {
-           //     user = user.substr(0, user.length - 1);
-           // }
+               user =user+$(this).attr("title")+","
+           });
 
-		   var msg = $("#msg").val();
+            if (user.length > 0) {
+                user = user.substr(0, user.length - 1);
+            }
+
+           var msg = $("#msg").val();
 		   if(msg!=null){
 				$.ajax({
-                    method: 'post',
+                    method: 'get',
                     url: '/sendmsg',
-                    data:{
-                        username: user,
-                        msg:msg
+                    data: {
+                        "username": user,
+                        "msg": msg
                     },
                     success:function(data) {
+                        var content = $("#content").html();
+                        $("#content").html(content+'<div style="margin-bottom: 8px">\n' +
+                            '                        <p><q style="color: #eb7350">'+'服务器推送  '+msg+' -->'+user+ '</span></p>\n' +
+                            '                    </div>\n' +
+                            '                    <br/>');
                         console.log(data);
                     }
                 })
@@ -95,6 +100,11 @@
                        msg:msg
                    },
                    success:function(data) {
+                       var content = $("#content").html();
+                       $("#content").html(content+'<div style="margin-bottom: 8px">\n' +
+                           '                        <p><q style="color: #eb7350">'+'服务器推送  '+msg+' --> 所有用户'+ '</span></p>\n' +
+                           '                    </div>\n' +
+                           '                    <br/>');
                        console.log(data);
                    }
                })
@@ -117,9 +127,8 @@
                }
                ws.onmessage = function(evt) {
                    var content = $("#content").html();
-                   content = content+evt.data;
-                   $("#content").html(content+'<div style="float: right;margin-bottom: 8px">\n' +
-                       '                        <p><q style="color: mediumorchid">'+evt.data+ '</span></p>\n' +
+                   $("#content").html(content+'<div style="text-align: right;margin-bottom: 8px">\n' +
+                       '                        <p><q style="color: mediumorchid;text-align: right">'+evt.data+ '</span></p>\n' +
                        '                    </div>\n' +
                        '                    <br/>');
                    console.log(msg)
@@ -130,6 +139,11 @@
                };
 
                ws.onopen = function(evt) {
+                   var content = $("#content").html();
+                   $("#content").html(content+'<div style="margin-bottom: 8px">\n' +
+                       '                        <p><q style="color: #eb7350">'+'服务器初始化成功...'+ '</span></p>\n' +
+                       '                    </div>\n' +
+                       '                    <br/>');
                   console.log('连接成功')
                };
        }

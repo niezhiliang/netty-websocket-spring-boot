@@ -1,11 +1,9 @@
 package com.suyu.websocket.controller;
 
-import com.suyu.websocket.entity.Params;
 import com.suyu.websocket.server.SocketServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -50,12 +48,11 @@ public class WebSocketController {
      */
     @RequestMapping("sendmsg")
     @ResponseBody
-    public String sendmsg(@RequestBody Params params){
+    public String sendmsg(String msg, String username){
         //第一个参数 :msg 发送的信息内容
         //第二个参数为用户长连接传的用户人数
-        //String [] persons = username.split(",");
-       // SocketServer.SendMany(msg,persons);
-        System.out.println("asd");
+        String [] persons = username.split(",");
+        SocketServer.SendMany(msg,persons);
         return "success";
     }
 
@@ -78,7 +75,7 @@ public class WebSocketController {
     public String webstatus(){
         //当前用户个数
        int count = SocketServer.getOnlineNum();
-       //当年用户的username
+       //当前用户的username
        SocketServer.getOnlineUsers();
         return "tongji";
     }

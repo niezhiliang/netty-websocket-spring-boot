@@ -35,7 +35,7 @@ public class SocketServer {
 	 */
 	@OnMessage
 	public void onMessage(String message){
-		sendMessage(sessionIds.get(session.getId())+":"+message,"niezhiliang9595");
+		sendMessage(sessionIds.get(session.getId())+"<--"+message,"niezhiliang9595");
 		System.out.println("发送人:"+sessionIds.get(session.getId())+"内容:"+message);
 	}
 
@@ -79,11 +79,9 @@ public class SocketServer {
 	 * @return
 	 */
 	public static int getOnlineNum(){
-		for (String key : sessionIds.keySet()) {//niezhiliang9595是服务端自己的连接，不能算在线人数
-			if ("niezhiliang9595".equals(sessionIds.get(key)))
-			{
-				return  sessionPool.size()-1;
-			}
+		if(sessionIds.values().contains("niezhiliang9595")) {
+
+			return sessionPool.size()-1;
 		}
 		return sessionPool.size();
 	}
@@ -109,7 +107,10 @@ public class SocketServer {
 	 */
 	public static void sendAll(String msg) {
 		for (String key : sessionIds.keySet()) {
-			sendMessage(msg, sessionIds.get(key));
+			if (!"niezhiliang9595".equals(sessionIds.get(key)))
+			{
+				sendMessage(msg, sessionIds.get(key));
+			}
 	    }
 	}
 
