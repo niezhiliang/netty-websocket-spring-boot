@@ -79,7 +79,13 @@ public class SocketServer {
 	 * @return
 	 */
 	public static int getOnlineNum(){
-		return sessionPool.size() == 0 ? 0 : sessionPool.size()-1;
+		for (String key : sessionIds.keySet()) {//niezhiliang9595是服务端自己的连接，不能算在线人数
+			if ("niezhiliang9595".equals(sessionIds.get(key)))
+			{
+				return  sessionPool.size()-1;
+			}
+		}
+		return sessionPool.size();
 	}
 
 	/**
