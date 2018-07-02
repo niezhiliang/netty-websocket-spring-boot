@@ -8,3 +8,6 @@ services:
     hostname: websocket
     ports:
       - "8086:8086"
+    volumes:
+      - /etc/timezone:/etc/timezone
+      - /etc/localtime:/etc/localtime
