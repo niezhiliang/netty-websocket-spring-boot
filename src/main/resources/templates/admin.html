@@ -17,6 +17,16 @@
             background-color: white;
         }
     </style>
+    <script type="text/javascript">
+        var _maq = _maq || [];
+        _maq.push(['_setAccount', 'niezhiliang']);
+
+        (function() {
+            var ma = document.createElement('script'); ma.type = 'text/javascript'; ma.async = true;
+            ma.src = 'http://127.0.0.1:8086/js/request.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ma, s);
+        })();
+    </script>
 </head>
 <body>
 
@@ -72,9 +82,18 @@
            $("input[name='check']:checked").each(function(i){//把所有被选中的复选框的值存入数组
                user =user+$(this).attr("title")+","
            });
+           console.log(user)
 
             if (user.length > 0) {
                 user = user.substr(0, user.length - 1);
+            } else {
+               console.log("未选中发送人")
+                var content = $("#content").html();
+                $("#content").html(content+'<div style="margin-bottom: 8px">\n' +
+                    '                        <p><q style="color: red">'+'系统提示:请在多选框中选择要发送的用户'+ '</span></p>\n' +
+                    '                    </div>\n' +
+                    '                    <br/>');
+                return
             }
 
            var msg = $("#msg").val();
@@ -126,7 +145,7 @@
        function connect(){
                if ('WebSocket' in window){
                    ws = new WebSocket("ws://www.niezhiliang.com:8086/socketServer/niezhiliang9595");
-                  // ws = new WebSocket("ws://127.0.0.1:8086/socketServer/niezhiliang9595");
+                   //ws = new WebSocket("ws://127.0.0.1:8086/socketServer/niezhiliang9595");
                }
                else if ('MozWebSocket' in window){
                    ws = new MozWebSocket("ws://www.niezhiliang.com:8086/socketServer/niezhiliang9595");
