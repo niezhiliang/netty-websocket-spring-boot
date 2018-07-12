@@ -3,4 +3,4 @@
 - 支持给一人推送信息，多人推送以及全部推送 个人推送和多人推送只要在多选框选择要推送的人，然后点击发送  全部推送 只需点击全部发送就好
 
 
-![演示gif](https://img-blog.csdn.net/20180605170857346?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MDgyMzA0/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![演示gif](https://github.com/niezhiliang/springbootwebsocket/blob/master/demo.gif)
