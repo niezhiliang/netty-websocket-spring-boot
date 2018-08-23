@@ -65,12 +65,12 @@ function connect(){
 	if(username!=null){
 	    $("#content").html('');
 		if ('WebSocket' in window){
-		     ws = new WebSocket("ws://www.niezhiliang.com:8086/socketServer/"+$("#username").val());
-            //ws = new WebSocket("ws://127.0.0.1:8086/socketServer/"+$("#username").val());
+		     //ws = new WebSocket("ws://www.niezhiliang.com:8086/socketServer/"+$("#username").val());
+           	     ws = new WebSocket("ws://127.0.0.1:8086/socketServer/"+$("#username").val());
 		}    
 	    else if ('MozWebSocket' in window){
-	        ws = new MozWebSocket("ws://www.niezhiliang.com:8086/socketServer/"+$("#username").val());
-            //ws = new MozWebSocket("ws://127.0.0.1:8086/socketServer/"+$("#username").val());
+	        //ws = new MozWebSocket("ws://www.niezhiliang.com:8086/socketServer/"+$("#username").val());
+                ws = new MozWebSocket("ws://127.0.0.1:8086/socketServer/"+$("#username").val());
 	    }
 	    else{
 	        alert("该浏览器不支持websocket");    
