@@ -63,7 +63,7 @@ public class SocketServer {
 	 * @param message
 	 * @param userId
 	 */
-	public static void sendMessage(String message,String userId){
+	public synchronized static void sendMessage(String message,String userId){
 		Session s = sessionPool.get(userId);
 		if(s!=null){
 			try {
@@ -78,7 +78,7 @@ public class SocketServer {
 	 * 获取当前连接数
 	 * @return
 	 */
-	public static int getOnlineNum(){
+	public synchronized static int getOnlineNum(){
 		if(sessionIds.values().contains("niezhiliang9595")) {
 
 			return sessionPool.size()-1;
@@ -90,7 +90,7 @@ public class SocketServer {
 	 * 获取在线用户名以逗号隔开
 	 * @return
 	 */
-	public static String getOnlineUsers(){
+	public synchronized static String getOnlineUsers(){
 		StringBuffer users = new StringBuffer();
 	    for (String key : sessionIds.keySet()) {//niezhiliang9595是服务端自己的连接，不能算在线人数
 	    	if (!"niezhiliang9595".equals(sessionIds.get(key)))
@@ -105,7 +105,7 @@ public class SocketServer {
 	 * 信息群发
 	 * @param msg
 	 */
-	public static void sendAll(String msg) {
+	public synchronized static void sendAll(String msg) {
 		for (String key : sessionIds.keySet()) {
 			if (!"niezhiliang9595".equals(sessionIds.get(key)))
 			{
@@ -120,7 +120,7 @@ public class SocketServer {
 	 * @param persons  用户s
 	 */
 
-	public static void SendMany(String msg,String [] persons) {
+	public synchronized static void SendMany(String msg,String [] persons) {
 		for (String userid : persons) {
 			sendMessage(msg, userid);
 		}
