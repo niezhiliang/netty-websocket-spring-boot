@@ -144,12 +144,12 @@
 
        function connect(){
                if ('WebSocket' in window){
-                   //ws = new WebSocket("ws://www.niezhiliang.com:8086/socketServer/niezhiliang9595");
-                   ws = new WebSocket("ws://127.0.0.1:8086/socketServer/niezhiliang9595");
+                   ws = new WebSocket("ws://www.niezhiliang.com:8086/socketServer/niezhiliang9595");
+                   //ws = new WebSocket("ws://127.0.0.1:8086/socketServer/niezhiliang9595");
                }
                else if ('MozWebSocket' in window){
-                   //ws = new MozWebSocket("ws://www.niezhiliang.com:8086/socketServer/niezhiliang9595");
-                   ws = new MozWebSocket("ws://127.0.0.1:8086/socketServer/niezhiliang9595");
+                   ws = new MozWebSocket("ws://www.niezhiliang.com:8086/socketServer/niezhiliang9595");
+                   //ws = new MozWebSocket("ws://127.0.0.1:8086/socketServer/niezhiliang9595");
                }
                else{
                    alert("该浏览器不支持websocket");
