@@ -16,15 +16,27 @@ import java.util.List;
  */
 @Controller
 public class WebSocketController {
+
     @Autowired
     private SocketServer socketServer;
 
+    /**
+     *
+     * 客户端页面
+     * @return
+     */
     @RequestMapping(value = "/index")
     public String idnex() {
 
         return "index";
     }
 
+    /**
+     *
+     * 服务端页面
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/admin")
     public String admin(Model model) {
         int num = socketServer.getOnlineNum();
@@ -58,18 +70,5 @@ public class WebSocketController {
     public String sendAll(String msg){
         SocketServer.sendAll(msg);
         return "success";
-    }
-
-    /**
-     * 获取当前在线用户
-     * @return
-     */
-    @RequestMapping("webstatus")
-    public String webstatus(){
-        //当前用户个数
-       int count = SocketServer.getOnlineNum();
-       //当前用户的username
-       SocketServer.getOnlineUsers();
-        return "tongji";
     }
 }
