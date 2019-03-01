@@ -28,14 +28,7 @@ public class WebSocketController {
     @RequestMapping(value = "/admin")
     public String admin(Model model) {
         int num = socketServer.getOnlineNum();
-        String str = socketServer.getOnlineUsers();
-        List<String> list = null;
-        if (str.length() > 2) {
-            str = str.substring(0,str.length()-1);
-            String [] strs = str.split(",");
-            list =  Arrays.asList(strs);
-        }
-
+        List<String> list = socketServer.getOnlineUsers();
 
         model.addAttribute("num",num);
         model.addAttribute("users",list);

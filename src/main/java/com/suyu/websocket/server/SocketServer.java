@@ -1,32 +1,34 @@
 package com.suyu.websocket.server;
 
+import com.suyu.websocket.entity.Client;
 import org.springframework.stereotype.Component;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.stream.Collectors;
 
-@ServerEndpoint(value = "/socketServer/{userid}")
+@ServerEndpoint(value = "/socketServer/{userName}")
 @Component
 public class SocketServer {
 
+	private static CopyOnWriteArraySet<Client> socketServers = new CopyOnWriteArraySet<>();
+
 	private Session session;
-	private static Map<String,Session> sessionPool = new HashMap<String,Session>();
-	private static Map<String,String> sessionIds = new HashMap<String,String>();
+
+	private final static String SYS_USERNAME = "niezhiliang9595";
+
 
 	/**
 	 * 用户连接时触发
 	 * @param session
-	 * @param userid
 	 */
 	@OnOpen
-	public void open(Session session,@PathParam(value="userid")String userid){
+	public void open(Session session,@PathParam(value="userName")String userName){
 		this.session = session;
-		sessionPool.put(userid, session);
-		sessionIds.put(session.getId(), userid);
+		socketServers.add(new Client(userName,session));
 	}
 
 	/**
@@ -35,8 +37,10 @@ public class SocketServer {
 	 */
 	@OnMessage
 	public void onMessage(String message){
-		sendMessage(sessionIds.get(session.getId())+"<--"+message,"niezhiliang9595");
-		System.out.println("发送人:"+sessionIds.get(session.getId())+"内容:"+message);
+		Client client = socketServers.stream().filter( cli -> cli.getSession() == session)
+				.collect(Collectors.toList()).get(0);
+		sendMessage(client.getUserName()+"<--"+message,SYS_USERNAME);
+		System.out.println("发送人:"+client.getUserName()+"内容:"+message);
 	}
 
 	/**
@@ -44,8 +48,11 @@ public class SocketServer {
 	 */
 	@OnClose
 	public void onClose(){
-		sessionPool.remove(sessionIds.get(session.getId()));
-		sessionIds.remove(session.getId());
+		socketServers.forEach(client ->{
+			if (client.getSession().getId().equals(session.getId())) {
+				socketServers.remove(client);
+			}
+		});
 	}
 
 	/**
@@ -61,17 +68,19 @@ public class SocketServer {
 	/**
 	 *信息发送的方法
 	 * @param message
-	 * @param userId
+	 * @param userName
 	 */
-	public synchronized static void sendMessage(String message,String userId){
-		Session s = sessionPool.get(userId);
-		if(s!=null){
-			try {
-				s.getBasicRemote().sendText(message);
-			} catch (IOException e) {
-				e.printStackTrace();
+	public synchronized static void sendMessage(String message,String userName) {
+
+		socketServers.forEach(client ->{
+			if (userName.equals(client.getUserName())) {
+				try {
+					client.getSession().getBasicRemote().sendText(message);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-		}
+		});
 	}
 
 	/**
@@ -79,51 +88,48 @@ public class SocketServer {
 	 * @return
 	 */
 	public synchronized static int getOnlineNum(){
-		if(sessionIds.values().contains("niezhiliang9595")) {
-
-			return sessionPool.size()-1;
-		}
-		return sessionPool.size();
+		//避免服务端第一次加载会出现在线人数-1的情况
+		return socketServers.size()-1 > 0 ? socketServers.size()-1 : 0;
 	}
 
 	/**
 	 * 获取在线用户名以逗号隔开
 	 * @return
 	 */
-	public synchronized static String getOnlineUsers(){
-		StringBuffer users = new StringBuffer();
-	    for (String key : sessionIds.keySet()) {//niezhiliang9595是服务端自己的连接，不能算在线人数
-	    	if (!"niezhiliang9595".equals(sessionIds.get(key)))
-			{
-				users.append(sessionIds.get(key)+",");
-			}
-		}
-	    return users.toString();
+	public synchronized static List<String> getOnlineUsers(){
+
+		List<String> onlineUsers = socketServers.stream()
+				.filter(client -> !client.getUserName().equals(SYS_USERNAME))
+				.map(client -> client.getUserName())
+				.collect(Collectors.toList());
+
+	    return onlineUsers;
 	}
 
 	/**
 	 * 信息群发
-	 * @param msg
+	 * @param message
 	 */
-	public synchronized static void sendAll(String msg) {
-		for (String key : sessionIds.keySet()) {
-			if (!"niezhiliang9595".equals(sessionIds.get(key)))
-			{
-				sendMessage(msg, sessionIds.get(key));
+	public synchronized static void sendAll(String message) {
+		//群发，不能发送给服务端自己
+		socketServers.stream().filter(cli -> cli.getUserName() != SYS_USERNAME)
+				.forEach(client -> {
+			try {
+				client.getSession().getBasicRemote().sendText(message);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-	    }
+		});
 	}
 
 	/**
 	 * 多个人发送给指定的几个用户
-	 * @param msg
+	 * @param message
 	 * @param persons  用户s
 	 */
-
-	public synchronized static void SendMany(String msg,String [] persons) {
-		for (String userid : persons) {
-			sendMessage(msg, userid);
+	public synchronized static void SendMany(String message,String [] persons) {
+		for (String userName : persons) {
+			sendMessage(message,userName);
 		}
-
 	}
 }
