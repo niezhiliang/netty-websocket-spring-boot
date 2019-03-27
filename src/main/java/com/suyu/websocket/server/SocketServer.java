@@ -10,6 +10,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @ServerEndpoint(value = "/socketServer/{userName}")
@@ -17,6 +18,11 @@ import java.util.stream.Collectors;
 public class SocketServer {
 
 	private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
+
+	/**
+	 * 用来保存当前在线客户端数量
+	 */
+	private static AtomicInteger userCount = new AtomicInteger(0);
 
 	/**
 	 *
@@ -48,10 +54,17 @@ public class SocketServer {
 	 */
 	@OnOpen
 	public void open(Session session,@PathParam(value="userName")String userName){
-		this.session = session;
-		socketServers.add(new Client(userName,session));
 
-		logger.info("客户端:【{}】连接成功",userName);
+			this.session = session;
+			socketServers.add(new Client(userName,session));
+
+			//如果不是系统用户，则用户数量加1
+			if (!SYS_USERNAME.equals(userName)) {
+				userCount.incrementAndGet();
+			}
+
+			logger.info("客户端:【{}】连接成功",userName);
+
 	}
 
 	/**
@@ -84,6 +97,11 @@ public class SocketServer {
 
 				logger.info("客户端:【{}】断开连接",client.getUserName());
 				socketServers.remove(client);
+
+				//如果不是系统用户，则用户数量减1
+				if (!SYS_USERNAME.equals(client.getUserName())) {
+					userCount.decrementAndGet();
+				}
 			}
 		});
 	}
@@ -97,7 +115,7 @@ public class SocketServer {
     public void onError(Throwable error) {
 		socketServers.forEach(client ->{
 			if (client.getSession().getId().equals(session.getId())) {
-
+				socketServers.remove(client);
 				logger.error("客户端:【{}】发生异常",client.getUserName());
 				error.printStackTrace();
 			}
@@ -129,20 +147,12 @@ public class SocketServer {
 
 	/**
 	 *
-	 * 获取服务端当前客户端的连接数量，
-	 * 因为服务端本身也作为客户端接受信息，
-	 * 所以连接总数还要减去服务端
-	 * 本身的一个连接数
-	 *
-	 * 这里运用三元运算符是因为客户端第一次在加载的时候
-	 * 客户端本身也没有进行连接，-1 就会出现总数为-1的情况，
-	 * 这里主要就是为了避免出现连接数为-1的情况
+	 * 获取服务端当前客户端的连接数量
 	 *
 	 * @return
 	 */
 	public synchronized static int getOnlineNum(){
-		//避免服务端第一次加载会出现在线人数-1的情况
-		return socketServers.size()-1 > 0 ? socketServers.size()-1 : 0;
+		return userCount.get();
 	}
 
 	/**
