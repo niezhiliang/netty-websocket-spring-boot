@@ -10,7 +10,6 @@
 
 
 ![演示gif](https://github.com/niezhiliang/springbootwebsocket/blob/master/demo.gif)
-![演示gif](https://gitee.com/niezhiliang/blogimgs/blob/master/webhooks.png)
 
 ### Websocket
 
