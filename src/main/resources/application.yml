@@ -1,8 +1,0 @@
-server:
-  port: 8086
-
-spring:
-    devtools:
-      restart:
-        exclude:  static/**,public/**
-        enabled:  true
