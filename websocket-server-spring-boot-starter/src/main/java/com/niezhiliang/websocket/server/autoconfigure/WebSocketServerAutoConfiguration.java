@@ -1,8 +1,13 @@
 package com.niezhiliang.websocket.server.autoconfigure;
 
 import com.niezhiliang.websocket.server.autoconfigure.holder.ChannelHolder;
+import com.niezhiliang.websocket.server.autoconfigure.holder.DistributedHolderStrategy;
 import com.niezhiliang.websocket.server.autoconfigure.holder.LocalHolderStrategy;
-import com.niezhiliang.websocket.server.autoconfigure.netty.*;
+import com.niezhiliang.websocket.server.autoconfigure.netty.server.ServerConnecteHandler;
+import com.niezhiliang.websocket.server.autoconfigure.netty.server.ServerInitializerHandler;
+import com.niezhiliang.websocket.server.autoconfigure.netty.server.ServerMessageHandler;
+import com.niezhiliang.websocket.server.autoconfigure.netty.server.WebsocketServer;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,8 +30,14 @@ public class WebSocketServerAutoConfiguration {
         return new ServerConnecteHandler();
     }
 
+//    @Bean
+//    @ConditionalOnBean(name = "redisTemplate")
+//    public ChannelHolder distributedHolderStrategy() {
+//        return new DistributedHolderStrategy();
+//    }
+
     @Bean
-    public ChannelHolder channelHolder() {
+    public ChannelHolder localHolderStrategy() {
         return new LocalHolderStrategy();
     }
 

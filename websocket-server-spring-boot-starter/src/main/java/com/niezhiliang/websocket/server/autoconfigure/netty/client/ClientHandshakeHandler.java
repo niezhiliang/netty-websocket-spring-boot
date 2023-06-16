@@ -1,4 +1,4 @@
-package com.niezhiliang.websocket.client.springboot.starter.netty;
+package com.niezhiliang.websocket.server.autoconfigure.netty.client;
 
 import io.netty.channel.*;
 import io.netty.handler.codec.http.FullHttpResponse;
@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2023/6/16
  */
 @Slf4j
-public class WsClientHandshakeHandler extends ChannelInboundHandlerAdapter {
+public class ClientHandshakeHandler extends ChannelInboundHandlerAdapter {
 
     /**
      * 连接处理器
@@ -25,7 +25,7 @@ public class WsClientHandshakeHandler extends ChannelInboundHandlerAdapter {
 
     private Channel channel;
 
-    public WsClientHandshakeHandler(WebSocketClientHandshaker webSocketClientHandshaker) {
+    public ClientHandshakeHandler(WebSocketClientHandshaker webSocketClientHandshaker) {
         this.webSocketClientHandshaker = webSocketClientHandshaker;
     }
 

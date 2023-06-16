@@ -16,7 +16,6 @@
 
     <modules>
         <module>websocket-server-spring-boot-starter</module>
-        <module>websocket-client-spring-boot-starter</module>
         <module>websocket-server-spring-boot-demo</module>
         <module>client-demo</module>
     </modules>

@@ -6,6 +6,10 @@ spring:
     restart:
       exclude:  static/**,public/**
       enabled:  true
+  redis:
+    host: 10.1.175.202
+    password: hzzh@2018
+    port: 7001
 ws:
   server:
     enable: true

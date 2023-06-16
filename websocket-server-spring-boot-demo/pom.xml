@@ -31,6 +31,11 @@
             <artifactId>websocket-server-spring-boot-starter</artifactId>
             <version>v1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>3.20.0</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -1,4 +1,4 @@
-package com.niezhiliang.websocket.server.autoconfigure.netty;
+package com.niezhiliang.websocket.server.autoconfigure.netty.server;
 
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;

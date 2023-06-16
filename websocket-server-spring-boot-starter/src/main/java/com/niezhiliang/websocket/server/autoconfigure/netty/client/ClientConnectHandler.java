@@ -1,4 +1,4 @@
-package com.niezhiliang.websocket.client.springboot.starter.netty;
+package com.niezhiliang.websocket.server.autoconfigure.netty.client;
 
 import io.netty.channel.*;
 import io.netty.handler.timeout.IdleState;

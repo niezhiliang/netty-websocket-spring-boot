@@ -1,4 +1,4 @@
-package com.niezhiliang.websocket.client.springboot.starter.netty;
+package com.niezhiliang.websocket.server.autoconfigure.netty.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -15,8 +15,6 @@ import io.netty.handler.timeout.IdleStateHandler;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -28,13 +26,13 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Getter
-public class WebsocketClient implements ApplicationListener<ContextRefreshedEvent> {
+public class WebsocketClient{
 
-    private String host = "127.0.0.1";
+    private String host;
 
-    private Integer port = 10086;
+    private Integer port;
 
-    private String wsUri = "ws://localhost:10086/websocket";
+    private String wsUri;
 
     private Integer maxContentLength = 65536;
 
@@ -46,11 +44,18 @@ public class WebsocketClient implements ApplicationListener<ContextRefreshedEven
 
     private final EventLoopGroup group = new NioEventLoopGroup(2);
 
+
+    public WebsocketClient(String host, Integer port, String wsUri) {
+        this.host = host;
+        this.port = port;
+        this.wsUri = wsUri;
+    }
+
     @SneakyThrows
-    private void start() {
+    public void connect() {
         WebsocketClient client = this;
         WebSocketClientHandshaker webSocketClientHandshaker = WebSocketClientHandshakerFactory.newHandshaker(URI.create(wsUri), WebSocketVersion.V13, null, true, new DefaultHttpHeaders());
-        WsClientHandshakeHandler wsClientHandshakeHandler = new WsClientHandshakeHandler(webSocketClientHandshaker);
+        ClientHandshakeHandler clientHandshakeHandler = new ClientHandshakeHandler(webSocketClientHandshaker);
         Bootstrap bootstrap = new Bootstrap();
         channel = bootstrap.option(ChannelOption.SO_KEEPALIVE,Boolean.TRUE)
                             .option(ChannelOption.TCP_NODELAY,Boolean.TRUE)
@@ -64,14 +69,14 @@ public class WebsocketClient implements ApplicationListener<ContextRefreshedEven
                                             .addLast(new ClientConnectHandler(client))
                                             .addLast(new HttpClientCodec())
                                             .addLast(new HttpObjectAggregator(maxContentLength))
-                                            .addLast(wsClientHandshakeHandler)
+                                            .addLast(clientHandshakeHandler)
                                             .addLast(new ClientMessageHandler());
                                 }
                             })
                             .connect(new InetSocketAddress(host,port))
                             .sync()
                             .channel();
-        wsClientHandshakeHandler.handshakeFuture().addListener(new ChannelFutureListener() {
+        clientHandshakeHandler.handshakeFuture().addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture channelFuture) {
                 log.info("客户端：{} 握手成功，开始发送心跳",channelFuture.channel().id().asShortText());
@@ -79,11 +84,6 @@ public class WebsocketClient implements ApplicationListener<ContextRefreshedEven
             }
         }).sync();
         channel.closeFuture().addListener((ChannelFutureListener) channelFuture -> close());
-    }
-
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
-        this.start();
     }
 
     /**
