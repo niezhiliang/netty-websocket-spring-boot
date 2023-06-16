@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @ChannelHandler.Sharable
-public class MessageHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
+public class ServerMessageHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext context, WebSocketFrame frame) {

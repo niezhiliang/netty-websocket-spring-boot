@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @ChannelHandler.Sharable
 @Slf4j
-public class ConnecteHandler extends ChannelInboundHandlerAdapter {
+public class ServerConnecteHandler extends ChannelInboundHandlerAdapter {
 
     @Autowired
     private ChannelHolder channelHolder;

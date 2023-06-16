@@ -8,6 +8,9 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.annotation.Order;
 
 import java.net.InetAddress;
 
@@ -16,13 +19,14 @@ import java.net.InetAddress;
  * @date 2023/6/14
  */
 @Slf4j
-public class WebsocketServer {
+@Order(Integer.MAX_VALUE -1)
+public class WebsocketServer implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
     private WebsocketProperties websocketProperties;
 
     @Autowired
-    private InitializerHandler initializerHandler;
+    private ServerInitializerHandler serverInitializerHandler;
 
     private String ip;
 
@@ -35,7 +39,7 @@ public class WebsocketServer {
         NioEventLoopGroup worker = new NioEventLoopGroup(websocketProperties.getWorkerThread());
         serverBootstrap.group(boss,worker)
                 .channel(NioServerSocketChannel.class)
-                .childHandler(initializerHandler)
+                .childHandler(serverInitializerHandler)
                 .option(ChannelOption.SO_BACKLOG,1)
                 .childOption(ChannelOption.SO_KEEPALIVE,Boolean.TRUE);
 
@@ -51,4 +55,8 @@ public class WebsocketServer {
         });
     }
 
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        this.start();
+    }
 }

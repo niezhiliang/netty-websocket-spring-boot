@@ -2,7 +2,6 @@ package com.niezhiliang.websocket.server.autoconfigure;
 
 import com.niezhiliang.websocket.server.autoconfigure.holder.ChannelHolder;
 import com.niezhiliang.websocket.server.autoconfigure.holder.LocalHolderStrategy;
-import com.niezhiliang.websocket.server.autoconfigure.listener.StarterEventListener;
 import com.niezhiliang.websocket.server.autoconfigure.netty.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -22,13 +21,8 @@ public class WebSocketServerAutoConfiguration {
     }
 
     @Bean
-    public ConnecteHandler connecteHandler() {
-        return new ConnecteHandler();
-    }
-
-    @Bean
-    public HeatBeatHandler heatBeatHandler() {
-        return new HeatBeatHandler();
+    public ServerConnecteHandler connecteHandler() {
+        return new ServerConnecteHandler();
     }
 
     @Bean
@@ -37,23 +31,18 @@ public class WebSocketServerAutoConfiguration {
     }
 
     @Bean
-    public InitializerHandler initializerHandler() {
-        return new InitializerHandler();
+    public ServerInitializerHandler initializerHandler() {
+        return new ServerInitializerHandler();
     }
 
     @Bean
-    public MessageHandler messageHandler() {
-        return new MessageHandler();
+    public ServerMessageHandler messageHandler() {
+        return new ServerMessageHandler();
     }
 
     @Bean
     public WebsocketServer websocketServer() {
         return new WebsocketServer();
-    }
-
-    @Bean
-    public StarterEventListener starterEventListener() {
-        return new StarterEventListener();
     }
 
 }

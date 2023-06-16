@@ -7,7 +7,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
-import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author nzl
  * @date 2023/6/14
  */
-public class InitializerHandler extends ChannelInitializer<SocketChannel> {
+public class ServerInitializerHandler extends ChannelInitializer<SocketChannel> {
 
     @Autowired
-    private MessageHandler messageHandler;
+    private ServerMessageHandler serverMessageHandler;
 
     @Autowired
-    private ConnecteHandler handshakeHandler;
+    private ServerConnecteHandler handshakeHandler;
 
 //    @Autowired
 //    private HeatBeatHandler heatBeatHandler;
@@ -42,6 +41,6 @@ public class InitializerHandler extends ChannelInitializer<SocketChannel> {
 //                .addLast(heatBeatHandler)
 //                .addLast(new WebSocketServerCompressionHandler())
                 .addLast(new WebSocketServerProtocolHandler(websocketProperties.getWebSocketPrefix(),null,true,65535))
-                .addLast(messageHandler);
+                .addLast(serverMessageHandler);
     }
 }
