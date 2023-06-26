@@ -1,6 +1,8 @@
 # netty-websocket-spring-boot 
 基于Netty实现了大部分spring-websocket的功能，
 
+![演示gif](./imgs/img.png)
+
 ```java
 <dependency>
     <groupId>com.niezhiliang</groupId>
