@@ -1,0 +1,20 @@
+server:
+  port: 8080
+
+spring:
+    devtools:
+      restart:
+        exclude:  static/**,public/**
+        enabled:  true
+netty:
+  websocket:
+    port: 8086
+    bossThreadNums: 1
+    workerThreadNums: 2
+    connectTimeout: 15000
+    backLog: 123
+    tcpNoDelay: true
+    readerIdleTimeSeconds: 30
+    writerIdleTimeSeconds: 30
+    allIdleTimeSeconds: 0
+    maxContentLength: 65536
