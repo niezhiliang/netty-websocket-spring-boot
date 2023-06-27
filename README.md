@@ -35,7 +35,7 @@ spring-websocket一样简单，而且使用语法尽可能的和Spring-Websocket
 | @PathParam   | √  |√  |√ | √ | √        | √|
 | String(消息内容) | ×  | ×  |×  | √   | ×   | × |
 | Throwable    | ×  | ×  |×  | ×  | ×   | √  |
-| Object       |  ×  | ×  |×  | ×  |  √  | × |
+| Object（事件）   |  ×  | ×  |×  | ×  |  √  | × |
 
 添加maven依赖
 ```java
